@@ -11,6 +11,13 @@ class Exchange : public QMainWindow
     Q_OBJECT
     QUdpSocket *localUdpSocket = nullptr;
     QUdpSocket *remoteUdpSocket = nullptr;
+    int remotePort;
+    int localPort;
+    void connect();
+    void disconnect();
+    void readDatagram();
+    void sendMessage();
+
 public:
     Exchange();
 };

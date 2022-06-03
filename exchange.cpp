@@ -2,7 +2,7 @@
 
 void Exchange::connect()
 {
-
+    localPort = ui->localPort->text().toInt();
 }
 
 Exchange::Exchange()
