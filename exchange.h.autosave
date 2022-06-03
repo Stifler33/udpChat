@@ -2,7 +2,6 @@
 #define EXCHANGE_H
 
 #include <QMainWindow>
-//#include <QObject>
 #include <QWidget>
 #include <QtNetwork/QtNetwork>
 
@@ -13,7 +12,7 @@ class Exchange : public udpChat
     QUdpSocket *remoteUdpSocket = nullptr;
     int remotePort;
     int localPort;
-    void connect();
+    bool connect(quint16 port);
     void disconnect();
     void readDatagram();
     void sendMessage();
