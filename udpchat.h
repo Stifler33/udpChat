@@ -3,10 +3,11 @@
 
 #include <QMainWindow>
 #include <QWidget>
-#include <QtNetwork/QtNetwork>
 #include <QPushButton>
 #include <QDialogButtonBox>
 #include <QVBoxLayout>
+#include <QString>
+#include "exchange.h"
 QT_BEGIN_NAMESPACE
 namespace Ui { class udpChat; }
 QT_END_NAMESPACE
@@ -19,7 +20,8 @@ class udpChat : public QMainWindow
 public:
     udpChat(QWidget *parent = nullptr);
     ~udpChat();
-
+public slots:
+    void showDatagram();
 private slots:
 
     void on_buttonConnect_clicked();
@@ -34,10 +36,7 @@ private slots:
 
 private:
     void outputText(QString outText);
-    int remotePort;
     Ui::udpChat *ui;
-    QUdpSocket *localUdpSocket = nullptr;
-    QUdpSocket *remoteUdpSocket = nullptr;
-    void readDatagram();
+    Exchange *exchange;
 };
 #endif // UDPCHAT_H

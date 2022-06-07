@@ -5,8 +5,8 @@ udpChat::udpChat(QWidget *parent)
     , ui(new Ui::udpChat)
 {
     ui->setupUi(this);
-    remoteUdpSocket = new QUdpSocket(this);
-    localUdpSocket = new QUdpSocket(this);
+    exchange = new Exchange;
+    connect(exchange, &Exchange::readDatagram, this, &udpChat::showDatagram);
 }
 
 udpChat::~udpChat()
@@ -14,42 +14,30 @@ udpChat::~udpChat()
     delete ui;
 }
 
-void udpChat::on_buttonConnect_clicked()
+void udpChat::showDatagram()
 {
-    int localPort = ui->localPort->text().toInt();
-    remotePort = ui->remotePort->text().toInt();
-
-    if (localUdpSocket->bind(QHostAddress::LocalHost, localPort)){
-        outputText("connect local potr " + ui->localPort->text());
-    }else{
-        outputText("filed connect local potr");
-    }
-    connect(localUdpSocket, &QUdpSocket::readyRead, this , &udpChat::readDatagram);
+    outputText("incoming message : ");
 }
 
-void udpChat::readDatagram(){
-    QByteArray datagram;
-    while (localUdpSocket->hasPendingDatagrams()){
-        datagram.resize(localUdpSocket->pendingDatagramSize());
-        localUdpSocket->readDatagram(datagram.data(), datagram.size());
-        QString resultMessage = datagram.constData();
-        outputText("intput message : " + resultMessage);
+void udpChat::on_buttonConnect_clicked()
+{
+    quint16 localPort = ui->localPort->text().toInt();
+    if (exchange->connectPort(localPort)){
+        outputText(QString("connect %1 port").arg(localPort));
     }
 }
 
 void udpChat::on_buttonSend_clicked()
 {
-    QByteArray datagram(ui->inputMessage->text().toUtf8(), -1);
-    if (remoteUdpSocket->writeDatagram(datagram, QHostAddress::LocalHost,remotePort) < 0){
-        outputText("filed send");
+    if (!exchange->sendMessage(ui->inputMessage->text(), ui->remotePort->text().toInt())){
+        outputText("send failed");
     }
     ui->inputMessage->clear();
 }
 
 void udpChat::on_buttonDisconnect_clicked()
 {
-    localUdpSocket->close();
-    remoteUdpSocket->close();
+    exchange->disconnect();
     outputText("disconnect");
 }
 
