@@ -6,12 +6,15 @@ udpChat::udpChat(QWidget *parent)
 {
     ui->setupUi(this);
     exchange = new Exchange;
-    //connect(exchange, &Exchange::readDatagram, this, &udpChat::showDatagram);
+    exchange->moveToThread(&threadExchange);
+    connect(&threadExchange, &QThread::finished, exchange, &QObject::deleteLater);
+    threadExchange.start();
 }
-
 udpChat::~udpChat()
 {
     delete ui;
+    threadExchange.quit();
+    threadExchange.wait();
 }
 
 void udpChat::showDatagram(QString &message)

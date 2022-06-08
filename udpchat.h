@@ -7,6 +7,7 @@
 #include <QDialogButtonBox>
 #include <QVBoxLayout>
 #include <QString>
+#include <QThread>
 #include "exchange.h"
 QT_BEGIN_NAMESPACE
 namespace Ui { class udpChat; }
@@ -36,6 +37,7 @@ private slots:
 
 private:
     void outputText(QString outText);
+    QThread threadExchange;
     Ui::udpChat *ui;
     Exchange *exchange;
 };

@@ -2,7 +2,7 @@
 #define EXCHANGE_H
 
 #include <QMainWindow>
-#include <QWidget>
+//#include <QWidget>
 #include <QtNetwork/QtNetwork>
 class Exchange : public QMainWindow
 {
