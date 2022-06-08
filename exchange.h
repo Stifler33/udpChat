@@ -16,7 +16,9 @@ public:
     void disconnect();
     bool sendMessage(const QString &message, quint16 remotePort);
 signals:
-   void readDatagram(QString &resultMessage);
+    void haveMessage(QString &message);
+public slots:
+    void readDatagram();
 };
 
 #endif // EXCHANGE_H

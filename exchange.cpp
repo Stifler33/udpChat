@@ -9,7 +9,7 @@ Exchange::Exchange()
 bool Exchange::connectPort(quint16 port)
 {
     if (localUdpSocket->bind(QHostAddress::LocalHost, port)){
-        connect(localUdpSocket, &QUdpSocket::readyRead, this,&Exchange::readDatagram);
+        connect(localUdpSocket, &QUdpSocket::readyRead, this, &Exchange::readDatagram);
         return true;
     }
     return false;
@@ -21,14 +21,15 @@ void Exchange::disconnect()
     remoteUdpSocket->close();
 }
 
-void Exchange::readDatagram(QString &resultMessage)
+void Exchange::readDatagram()
 {
     QByteArray datagram;
     while (localUdpSocket->hasPendingDatagrams()){
         datagram.resize(localUdpSocket->pendingDatagramSize());
         localUdpSocket->readDatagram(datagram.data(), datagram.size());
     }
-    resultMessage = datagram.constData();
+    QString resultMessage = datagram.constData();
+    emit haveMessage(resultMessage);
 }
 
 bool Exchange::sendMessage(const QString &message, quint16 remotePort)

@@ -6,7 +6,7 @@ udpChat::udpChat(QWidget *parent)
 {
     ui->setupUi(this);
     exchange = new Exchange;
-    connect(exchange, &Exchange::readDatagram, this, &udpChat::showDatagram);
+    //connect(exchange, &Exchange::readDatagram, this, &udpChat::showDatagram);
 }
 
 udpChat::~udpChat()
@@ -14,15 +14,16 @@ udpChat::~udpChat()
     delete ui;
 }
 
-void udpChat::showDatagram()
+void udpChat::showDatagram(QString &message)
 {
-    outputText("incoming message : ");
+    outputText("incoming message : " + message);
 }
 
 void udpChat::on_buttonConnect_clicked()
 {
     quint16 localPort = ui->localPort->text().toInt();
     if (exchange->connectPort(localPort)){
+        connect(exchange, &Exchange::haveMessage, this, &udpChat::showDatagram);
         outputText(QString("connect %1 port").arg(localPort));
     }
 }

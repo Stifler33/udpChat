@@ -21,7 +21,7 @@ public:
     udpChat(QWidget *parent = nullptr);
     ~udpChat();
 public slots:
-    void showDatagram();
+    void showDatagram(QString &message);
 private slots:
 
     void on_buttonConnect_clicked();
