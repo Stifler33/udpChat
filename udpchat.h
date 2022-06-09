@@ -21,8 +21,13 @@ class udpChat : public QMainWindow
 public:
     udpChat(QWidget *parent = nullptr);
     ~udpChat();
+signals:
+    void connectToPort(quint16 port);
+    void pressSendMessage(QString message, quint16 port);
+    void pressDisconnect();
 public slots:
     void showDatagram(QString &message);
+    void outputText(QString outText);
 private slots:
 
     void on_buttonConnect_clicked();
@@ -36,7 +41,6 @@ private slots:
     void on_inputMessage_returnPressed();
 
 private:
-    void outputText(QString outText);
     QThread threadExchange;
     Ui::udpChat *ui;
     Exchange *exchange;

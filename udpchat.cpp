@@ -8,6 +8,10 @@ udpChat::udpChat(QWidget *parent)
     exchange = new Exchange;
     exchange->moveToThread(&threadExchange);
     connect(&threadExchange, &QThread::finished, exchange, &QObject::deleteLater);
+    connect(this, &udpChat::pressSendMessage, exchange, &Exchange::sendMessage);
+    connect(this, &udpChat::pressDisconnect, exchange, &Exchange::disconnect);
+    connect(exchange, &Exchange::throwNotification, this, &udpChat::outputText);
+    connect(this, &udpChat::connectToPort, exchange, &Exchange::connectPort);
     threadExchange.start();
 }
 udpChat::~udpChat()
@@ -15,6 +19,7 @@ udpChat::~udpChat()
     delete ui;
     threadExchange.quit();
     threadExchange.wait();
+
 }
 
 void udpChat::showDatagram(QString &message)
@@ -25,24 +30,18 @@ void udpChat::showDatagram(QString &message)
 void udpChat::on_buttonConnect_clicked()
 {
     quint16 localPort = ui->localPort->text().toInt();
-    if (exchange->connectPort(localPort)){
-        connect(exchange, &Exchange::haveMessage, this, &udpChat::showDatagram);
-        outputText(QString("connect %1 port").arg(localPort));
-    }
+    emit connectToPort(localPort);
 }
 
 void udpChat::on_buttonSend_clicked()
 {
-    if (!exchange->sendMessage(ui->inputMessage->text(), ui->remotePort->text().toInt())){
-        outputText("send failed");
-    }
+    emit pressSendMessage(ui->inputMessage->text(), ui->remotePort->text().toInt());
     ui->inputMessage->clear();
 }
 
 void udpChat::on_buttonDisconnect_clicked()
 {
-    exchange->disconnect();
-    outputText("disconnect");
+    emit pressDisconnect();
 }
 
 void udpChat::outputText(QString outText){
