@@ -42,7 +42,9 @@ private slots:
 
 private:
     QThread threadExchange;
+    QThread threadSender;
     Ui::udpChat *ui;
     Exchange *exchange;
+    Sender *sender;
 };
 #endif // UDPCHAT_H

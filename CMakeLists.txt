@@ -21,6 +21,7 @@ set(PROJECT_SOURCES
         udpchat.ui
         exchange.h
         exchange.cpp
+        sender.cpp
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

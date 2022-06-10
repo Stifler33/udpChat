@@ -1,7 +1,6 @@
 #include "exchange.h"
 Exchange::Exchange()
 {
-    remoteUdpSocket = new QUdpSocket(this);
     localUdpSocket = new QUdpSocket(this);
 }
 
@@ -18,7 +17,6 @@ void Exchange::connectPort(quint16 port)
 void Exchange::disconnect()
 {
     localUdpSocket->close();
-    remoteUdpSocket->close();
     emit throwNotification("disconnect");
 }
 
@@ -31,13 +29,5 @@ void Exchange::readDatagram()
     }
     QString resultMessage = datagram.constData();
     emit throwNotification("incoming message : " + resultMessage);
-}
-
-void Exchange::sendMessage(const QString &message, quint16 remotePort)
-{
-    QByteArray datagram(message.toUtf8(), -1);
-    if (remoteUdpSocket->writeDatagram(datagram, QHostAddress::LocalHost, remotePort) < 0){
-        emit throwNotification("send error\n" + remoteUdpSocket->errorString());
-    }
 }
 
